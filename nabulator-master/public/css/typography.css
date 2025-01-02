@@ -1,0 +1,88 @@
+html {
+  font-family: 'Roboto Mono';
+  color: var(--color-dark);
+  margin 0;
+  padding 0;
+  font-size: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 1.3rem;
+}
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 300;
+}
+
+h1,
+p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  margin: 0 0 0 -1rem;
+  list-style: none;
+}
+
+a,
+button {
+  text-decoration: none;
+  color: var(--color-glow);
+  cursor: pointer;
+}
+
+a:hover,
+button:hover {
+  text-decoration: underline;
+}
+
+a:focus,
+button:focus {
+  outline: none;
+  text-decoration: underline;
+}
+
+hr {
+  // background: none;
+  height: 1rem;
+  width: 100%;
+  margin: 0;
+  border: 0;
+}
+
+
+
+input,
+select {
+  padding: 1px 4px;
+  font-family: 'Roboto Mono';
+  border: 1px solid var(--color-medium);
+  width: 100%;
+  border-radius: 2px;
+  outline: none;
+  appearance: none;
+  background-color: transparent;
+}
+
+input:active,
+input:focus,
+select:active,
+select:focus {
+  outline: none;
+  border-color: var(--color-glow);
+}
+
+button {
+  width: 60px;
+  display: inline-block;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}

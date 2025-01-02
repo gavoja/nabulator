@@ -1,0 +1,6 @@
+.bar {
+  background-color: var(--color-dark);
+  border-radius: 2px;
+  position: relative;
+  width: 0;
+}

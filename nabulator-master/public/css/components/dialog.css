@@ -1,0 +1,16 @@
+.dialog {
+  position: absolute;
+  top: 32px;
+  left: calc(50% - 150px);
+  width: 300px;
+  background-color: var(--color-light);
+  border: 1px solid var(--color-medium);
+  z-index: 10;
+  transition: top 0.3s;
+}
+
+.dialog.hidden {
+  transition-property: none;
+  top: -100px;
+  z-index: -1;
+}

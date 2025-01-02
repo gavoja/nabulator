@@ -1,0 +1,11 @@
+:root {
+  --drawer-width: 40rem;
+  --header-height: 6.0rem;
+  --color-dark: #222;
+  --color-medium: #ddd;
+  --color-light: #eee;
+  --color-glow: #08f;
+  --color-bg: #fff;
+  --desktop: 900px;
+  --anim-time: 0.3s;
+}

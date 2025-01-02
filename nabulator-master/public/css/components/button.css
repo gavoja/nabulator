@@ -1,0 +1,11 @@
+.button {
+  border-radius: 2px;
+  padding: 0.2em 0.5em;
+  margin: 0.2em;
+  display: inline-block;
+}
+
+.button.selected {
+  background-color: var(--color-glow);
+  color: var(--color-bg);
+}

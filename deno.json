@@ -1,0 +1,20 @@
+{
+  "tasks": {
+    "start": "deno run src/build.js -A",
+    "serve": "deno run -A src/tools/serve.js",
+    "dev": "deno run --watch main.js"
+  },
+  "imports": {
+    "@std/http": "jsr:@std/http@^1.0.12",
+    "esbuild": "https://deno.land/x/esbuild@v0.24.1/mod.js",
+    "lit": "npm:lit@^3.2.1"
+  },
+  "fmt": {
+    "singleQuote": true,
+    "semiColons": false,
+    "indentWidth": 2,
+    "proseWrap": "preserve",
+    "lineWidth": 120,
+    "include": ["src/"]
+  }
+}

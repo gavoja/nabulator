@@ -1,0 +1,26 @@
+.burger {
+  position: absolute;
+  left: 0;
+  height: var(--header-height);
+  width: var(--header-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-dark);
+}
+
+.burger:hover {
+  text-decoration: none;
+}
+
+.burger > *::selection  {
+  color: var(--color-dark);
+  background-color: transparent;
+}
+
+@media screen and (min-width: 900px) {
+  .burger {
+    display: none;
+  }
+}

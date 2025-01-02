@@ -1,0 +1,15 @@
+.grid {
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 1rem;
+  grid-template-columns: 64px 64px 64px 1fr;
+}
+
+.grid__cell {
+  display: flex;
+  align-items: center;
+}
+
+.grid__cell[data-col-span="2"] { grid-column-end: span 2; }
+.grid__cell[data-col-span="3"] { grid-column-end: span 3; }
+.grid__cell[data-col-span="4"] { grid-column-end: span 4; }
