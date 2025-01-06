@@ -1,14 +1,16 @@
 import { context as esbuildContext } from 'esbuild'
 import { reload, serve } from './serve.js'
+import { denoPlugins } from '@luca/esbuild-deno-loader'
 
-const IS_PROD = false // TODO: .env
+const IS_PROD = Deno.env.get('IS_PROD') ?? false
+const contexts = []
 
-function serverReloadPlugin() {
+function serverReloadPlugin(text) {
   return {
     name: 'server-reload-plugin',
     setup(buildHandler) {
       buildHandler.onEnd(() => {
-        console.log('[build] Build completed.')
+        console.log(`[build] Build completed (${text}).`)
         reload()
       })
     },
@@ -35,24 +37,43 @@ function svgPlugin() {
 }
 
 async function main() {
-  const ctx = await esbuildContext({
-    entryPoints: ['./src/app/main.js', './src/app/index.html'],
-    loader: { '.html': 'copy' },
-    plugins: [serverReloadPlugin(), svgPlugin()],
-    outdir: './target',
-    format: 'esm',
-    bundle: true,
-    minify: IS_PROD,
-    sourcemap: IS_PROD ? false : 'inline',
-  })
+  contexts.push(
+    await esbuildContext({
+      entryPoints: ['./src/app/main.js'],
+      outdir: './target',
+      plugins: [...denoPlugins(), serverReloadPlugin('js'), svgPlugin()],
+      format: 'esm',
+      bundle: true,
+      minify: IS_PROD,
+      sourcemap: IS_PROD ? false : 'inline',
+      define: {
+        IS_PROD: JSON.stringify(IS_PROD),
+      },
+    }),
+  )
+
+  contexts.push(
+    await esbuildContext({
+      entryPoints: ['./src/app/index.html'],
+      loader: { '.html': 'copy' },
+      outdir: './target',
+      plugins: [serverReloadPlugin('html')],
+    }),
+  )
 
   if (IS_PROD) {
-    await ctx.rebuild()
-    await ctx.dispose()
+    for (const ctx of contexts) {
+      await ctx.rebuild()
+      await ctx.dispose()
+    }
   } else {
     serve()
-    await ctx.watch()
-    console.log('[build] Watching for changes ...')
+
+    for (const ctx of contexts) {
+      ctx.watch()
+    }
+
+    console.log('[build] Watching for changes...')
   }
 }
 

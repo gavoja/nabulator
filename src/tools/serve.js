@@ -36,17 +36,6 @@ connect()
 
 const clients = new Set()
 
-// Watch for changes in the root folder and broadcast reload to all clients.
-// async function watch () {
-//   const watcher = Deno.watchFs(ROOT, { recursive: true })
-//   for await (const event of watcher) {
-//     for (const client of clients) {
-//       client.send('reload')
-//     }
-//   }
-// }
-// watch()
-
 async function handler(req) {
   // Web socket server reload handling.
   if (req.headers.get('upgrade') === 'websocket') {
@@ -84,5 +73,3 @@ export function reload() {
     client.send('reload')
   }
 }
-
-// export default { fetch: handler }

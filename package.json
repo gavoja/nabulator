@@ -1,0 +1,37 @@
+{
+  "name": "nabulator",
+  "version": "0.1.0",
+  "description": "String tension calculatoir",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "start": "node tools/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gavoja/nabulator.git"
+  },
+  "keywords": [
+    "guitar",
+    "bass",
+    "string",
+    "tension"
+  ],
+  "author": "Michal Kochel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gavoja/nabulator/issues"
+  },
+  "homepage": "https://github.com/gavoja/nabulator#readme",
+  "dependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@twind/preact": "^1.0.5",
+    "preact": "^10.25.4",
+    "twind": "^0.16.19",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "esbuild": "^0.24.2"
+  }
+}
