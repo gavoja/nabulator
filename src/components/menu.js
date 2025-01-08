@@ -1,10 +1,11 @@
 import h from '../shared/h.js'
-import { useState, useLayoutEffect } from 'preact/hooks'
+import { useState, useLayoutEffect, useRef } from 'preact/hooks'
 import { Icon } from './icon.js'
 import { Box } from './box.js'
 import { Link } from './link.js'
 import { signIn, signOut, load, getEmail } from '../shared/google.js'
 import usePersistentState from '../shared/use-persistent-state.js'
+import focusTrap from '../shared/focus-trap.js'
 
 import ICON_MENU from '../assets/menu.svg'
 import ICON_CLOSE from '../assets/close.svg'
@@ -16,6 +17,8 @@ export function Menu () {
   const [editMode, setEditMode] = useState(false)
   const [ready, setReady] = useState(false)
   const [open, setOpen] = usePersistentState('menu-open', false)
+  const ref = useRef()
+  const popupRef = useRef()
 
   useLayoutEffect(() => {
     (async () => {
@@ -26,10 +29,18 @@ export function Menu () {
       setReady(true)
     })()
 
+
     setSelected(location.hash.substring(1))
-    window.addEventListener('hashchange', () => setSelected(location.hash.substring(1)))
+    window.addEventListener('hashchange', () => {
+      setSelected(location.hash.substring(1))
+      setEditMode(false)
+    })
   }, [])
 
+  useLayoutEffect(() => popupRef?.current?.querySelector?.('input')?.focus?.())
+
+  // const selectedSave = saves.find(save => save.value === selected)
+  const selectedSave = saves.find(save => save.value === selected)
   return h('div',
     h('button', {
       tw: 'w-11 h-11 rounded-sm items-center justify-center flex transition-all duration-200 lg:hidden',
@@ -43,7 +54,7 @@ export function Menu () {
         h(Box,
           !ready ? 'Loading...' : [
             // Not signed in.
-            !email && [
+            !email && h('div',
               h(Link, {
                 onClick() {
                   signIn()
@@ -51,9 +62,9 @@ export function Menu () {
                 children: 'Sign in with Google'
               }),
               h('span', ' to save')
-            ],
+            ),
             // Signed in.
-            email && [
+            email && h('div',
               h(Link, {
                 onClick() {
                   signOut()
@@ -66,9 +77,9 @@ export function Menu () {
               h('span', ' | '),
               h(Link, {
                 onClick: () => setEditMode(true),
-                children: saves.find(save => save.value === selected) ? 'Edit' : 'Save'
+                children: selectedSave ? 'Edit' : 'Save'
               })
-            ]
+            )
           ]
         ),
         // Saved tensions.
@@ -78,19 +89,58 @@ export function Menu () {
               href: `#${save.value}`,
               selected: true,
               // onClick: () => setState({ ...state, selected: save.value }),
-              children: save.name
+              children: save?.name
             })
           )
         )),
-        editMode && h(Popup)
+        // Popup.
+        editMode && h('div', {
+          tw: 'fixed top-0 left-0 right-0 bottom-0 z-10 bg-black bg-opacity-50 flex items-center justify-center animate-fade',
+          ref: popupRef,
+          onKeyDown (event) {
+            focusTrap(event, popupRef?.current)
+            if (event.key === 'Escape') {
+              setEditMode(false)
+            }
+
+            if (event.key === 'Enter') {
+              // TODO: Save.
+              setEditMode(false)
+            }
+          },
+          children: h('div', { tw: 'bg-white animate-tflow'},
+            h(Box,
+              h('input', {
+                tw: 'w-96 border-1 border-gray-300 p-1 pl-2 rounded-sm appearance-none',
+                ref,
+                value: selectedSave?.name,
+              }),
+              h('div', { tw: 'text-center space-x-4' },
+                h(Link, {
+                  href: '#',
+                  children: 'Save'
+                }),
+                selectedSave && h(Link, {
+                  href: '#',
+                  children: 'Delete'
+                }),
+                h(Link, {
+                  href: '#',
+                  onClick(event) {
+                    event.preventDefault()
+                    setEditMode(false)
+                  },
+                  children: 'Cancel'
+                })
+              )
+            )
+          )
+        })
       ]
     })
   )
 }
 
 function Popup({ hidden }) {
-  return h('div', {
-    tw: 'fixed top-0 left-0 right-0 bottom-0 z-10 bg-black bg-opacity-50 flex items-center justify-center animate-fade',
-    children: h('div', { tw: 'bg-white p-4' }, 'test')
-  })
+  return
 }

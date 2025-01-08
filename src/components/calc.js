@@ -54,7 +54,7 @@ export function Calc() {
           return [
             h(Select, {
               options: data.notes,
-              selectedValue: notes[index],
+              selectedValue: notes?.[index],
               onChange(event) {
                 notes[index] = event.target.value
                 location.hash = `/${notes}/${gauges}/${scale}`
@@ -62,7 +62,7 @@ export function Calc() {
             }),
             h(Select, {
               options: data.gauges,
-              selectedValue: gauges[index],
+              selectedValue: gauges?.[index],
               onChange(event) {
                 gauges[index] = event.target.value
                 location.hash = `/${tuning}/${gauges}/${scale}`
@@ -81,12 +81,16 @@ export function Calc() {
 }
 
 function resolveHash (hash) {
-  const [, tuning, gauges, scale] = hash.split('/')
-  return { tuning, notes: tuning.split(','), gauges: gauges.split(','), scale }
+  const [, tuning, gauges = [], scale] = hash.split('/')
+  return { tuning, notes: tuning.split(','), gauges: gauges?.split?.(','), scale }
 }
 
 function getTension (index) {
   const { notes, gauges, scale } = resolveHash(location.hash)
+
+  if (notes?.length !== 8 || gauges?.length !== 8 || !scale) {
+    return { tension: 0, newtons: 0, chart: 0 }
+  }
 
   // Get scale.
   const notesCount = notes.join(' ').trim().split(' ').length
