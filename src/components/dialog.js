@@ -27,7 +27,7 @@ export function Dialog ({ text, show, onUpdate, onDelete, onCancel }) {
 
   return h('dialog', {
     ref: dialogRef,
-    tw: 'backdrop:bg-black/50 backdrop:backdrop-blur-xs z-10 m-auto rounded-md w-80 h-fit animate-popup',
+    tw: 'backdrop:bg-black/50 backdrop:animate-fade backdrop:backdrop-blur-xs z-10 m-auto rounded-md w-80 h-fit animate-popup',
     onKeyDown (event) {
       if (event.key === 'Escape') {
         dialogRef.current?.close()
