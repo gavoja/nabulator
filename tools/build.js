@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import path from 'node:path'
 import { reload, serve } from './serve.js'
 
-const IS_PROD = process.env.IS_PROD === 'true'
+const IS_PROD = !process.argv.includes('--dev')
 
 function serverReloadPlugin () {
   return {

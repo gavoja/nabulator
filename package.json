@@ -1,17 +1,19 @@
 {
   "name": "nabulator",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "String tension calculator",
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "start": "node tools/build.js",
+    "start": "node tools/build.js --dev",
+    "build": "node tools/build.js",
     "lint": "npx eslint",
-    "format": "npx eslint --fix"
+    "format": "npx eslint --fix",
+    "deploy": "npm run lint && npm run build && node ./tools/deploy.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gavoja/nabulator.git"
+    "url": "https://github.com/gavoja/nabulator.git"
   },
   "keywords": [
     "guitar",
@@ -24,9 +26,8 @@
   "bugs": {
     "url": "https://github.com/gavoja/nabulator/issues"
   },
-  "homepage": "https://github.com/gavoja/nabulator#readme",
+  "homepage": "https://nabulator.nabusound.com",
   "dependencies": {
-    "preact": "^10.27.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "twcss": "^0.7.0",
@@ -37,6 +38,7 @@
     "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "fs-extra": "^11.3.2",
-    "neostandard": "^0.12.2"
+    "neostandard": "^0.12.2",
+    "netlify-cli": "^23.11.1"
   }
 }
