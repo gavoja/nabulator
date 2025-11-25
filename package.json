@@ -30,7 +30,7 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "twcss": "^0.7.0",
+    "twcss": "^0.8.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {

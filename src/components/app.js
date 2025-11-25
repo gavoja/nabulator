@@ -3,7 +3,7 @@ import h from '../shared/h.js'
 import { Calc } from './calc.js'
 import { Header } from './header.js'
 
-const SCROLL_STYLE = `
+const CUSTOM_SCROLLBAR = `
   ::-webkit-scrollbar {
     width: 4px;
     height: 4px;
@@ -20,10 +20,10 @@ const SCROLL_STYLE = `
 
 export function App () {
   return h('div', {
-    tw: 'fixed w-screen h-full font-mono relative text-sm text-gray-800 grid grid-cols-1',
+    tw: 'fixed w-screen h-full font-[JetBrains_Mono] relative text-sm text-gray-800 grid grid-cols-1',
     style: { gridTemplateRows: 'auto 1fr' },
     children: h(Fragment,
-      h('style', { key: 'app-style' }, SCROLL_STYLE),
+      h('style', { key: 'app-style' }, CUSTOM_SCROLLBAR),
       h(Header, { key: 'app-header' }),
       h(Calc, { key: 'app-calc' })
     )
