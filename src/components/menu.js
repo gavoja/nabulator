@@ -98,7 +98,7 @@ export function Menu () {
         ),
         // Saved tensions.
         h('ul', { tw: 'space-y-2 mt-4' }, saves.map(save =>
-          h('li', { tw: `border-l-4 pl-2 py-1 pr-1 transition-colors ${save.value === selected ? 'border-blue-500' : 'border-white'}`, key: save.value },
+          h('li', { tw: `border-l-4 p-1 transition-colors ${save.value === selected ? 'border-blue-500' : 'border-white'}`, key: save.value },
             h(Link, {
               href: `#${save.value}`,
               selected: true,

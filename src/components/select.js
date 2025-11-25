@@ -5,7 +5,7 @@ export function Select ({ options, name, selectedValue, onChange }) {
     tw: 'w-full border-1 border-gray-300 p-1 pl-2 rounded-sm bg-white',
     name,
     onChange,
-    defaultValue: selectedValue,
+    value: selectedValue,
     children: options.map(o =>
       h('option', {
         key: `${name}_${o.value || o.name || ''}`,
