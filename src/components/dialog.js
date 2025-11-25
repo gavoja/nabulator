@@ -1,65 +1,75 @@
-import { useEffect, useRef } from 'react'
-import focusTrap from '../shared/focus-trap.js'
+import { useRef, useEffect } from 'react'
 import h from '../shared/h.js'
 import { Box } from './box.js'
 import { Link } from './link.js'
 
-export function Dialog ({ text, onUpdate, onDelete, onCancel }) {
-  const ref = useRef()
+const FOCUS_DELAY = 10
 
-  // Focus the input and select the name.
+export function Dialog ({ text, show, onUpdate, onDelete, onCancel }) {
+  const dialogRef = useRef()
+  const inputRef = useRef()
+
   useEffect(() => {
-    if (ref.current) {
-      ref.current.focus()
-      ref.current.select()
+    if (!dialogRef.current) {
+      return
     }
-  }, [])
 
-  return h('div', {
-    tw: 'fixed top-0 left-0 right-0 bottom-0 text-center z-10 bg-black/50 animate-fade',
+    if (!show) {
+      dialogRef.current?.close()
+      return
+    }
+
+    dialogRef.current?.showModal()
+
+    // Focus on input.
+    setTimeout(() => inputRef?.current?.focus?.(), FOCUS_DELAY)
+  }, [show, text, onUpdate, onDelete, onCancel])
+
+  return h('dialog', {
+    ref: dialogRef,
+    tw: 'backdrop:bg-black/50 backdrop:backdrop-blur-xs z-10 m-auto rounded-md w-80 h-fit animate-popup',
     onKeyDown (event) {
-      focusTrap(event, ref?.current?.closest('.fixed'))
       if (event.key === 'Escape') {
+        dialogRef.current?.close()
         onCancel()
       }
 
       if (event.key === 'Enter') {
-        onUpdate(ref.current.value)
+        dialogRef.current?.close()
+        onUpdate(inputRef.current.value)
       }
     },
-    children: h('div', { tw: 'inline-block mt-22 bg-white animate-popup rounded-sm shrink grow-0' },
-      h(Box,
-        h('input', {
-          tw: 'w-72 border-1 border-gray-300 p-1 pl-2 rounded-sm appearance-none',
-          ref,
-          value: text
+    children: h(Box,
+      h('input', {
+        ref: inputRef,
+        tw: 'w-full border-1 border-gray-300 p-1 pl-2 rounded-sm appearance-none',
+        defaultValue: text
+      }),
+      h('div', { tw: 'text-center space-x-8' },
+        h(Link, {
+          href: '#',
+          children: 'Save',
+          onMouseDown (event) {
+            event.preventDefault()
+            onUpdate(inputRef.current.value)
+          }
         }),
-        h('div', { tw: 'text-center space-x-8' },
-          h(Link, {
-            href: '#',
-            children: 'Save',
-            onMouseDown (event) {
-              event.preventDefault()
-              onUpdate(ref.current.value)
-            }
-          }),
-          text && h(Link, {
-            href: '#',
-            children: 'Delete',
-            onMouseDown (event) {
-              event.preventDefault()
-              onDelete()
-            }
-          }),
-          h(Link, {
-            href: '#',
-            onMouseDown (event) {
-              event.preventDefault()
-              onCancel()
-            },
-            children: 'Cancel'
-          })
-        )
+        text && h(Link, {
+          href: '#',
+          children: 'Delete',
+          onMouseDown (event) {
+            event.preventDefault()
+            onDelete()
+          }
+        }),
+        h(Link, {
+          href: '#',
+          onMouseDown (event) {
+            event.preventDefault()
+            onCancel()
+          },
+          children: 'Cancel'
+        })
       )
     )
   })

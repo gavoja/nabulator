@@ -1,5 +1,5 @@
 /* global location */
-import { useLayoutEffect, Fragment } from 'react'
+import { Fragment, useLayoutEffect } from 'react'
 import data from '../shared/data.js'
 import h from '../shared/h.js'
 import usePersistentState from '../shared/use-persistent-state.js'
@@ -102,17 +102,15 @@ export function Calc () {
     h(Box,
       // Add checkbox to toggle between newtons and freedom units.
       h('label', { tw: 'cursor-pointer flex gap-2 items-center' },
-        h('div', { tw: 'flex items-center' },
-          h('input', {
-            tw: 'accent-blue-500',
-            name: 'units',
-            type: 'checkbox',
-            checked: freedomUnits,
-            onChange (event) {
-              setFreedomUnits(event.target.checked)
-            }
-          })
-        ),
+        h('input', {
+          tw: 'accent-blue-500 mb-0.5', // Align checkbox a bit better.
+          name: 'units',
+          type: 'checkbox',
+          checked: freedomUnits,
+          onChange (event) {
+            setFreedomUnits(event.target.checked)
+          }
+        }),
         h('span', 'Use freedom units instead of Newtons')
       ),
       h('p', { tw: 'mt-8' },

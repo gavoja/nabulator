@@ -108,6 +108,7 @@ export function Menu () {
         )),
         // Popup dialog.
         editMode && h(Dialog, {
+          show: true,
           text: selectedSave?.name,
           onUpdate (name) {
             updateSave(name)
