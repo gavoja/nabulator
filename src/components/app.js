@@ -1,9 +1,7 @@
-/* global location, localStorage */
 import { Fragment } from 'react'
 import h from '../shared/h.js'
 import { Calc } from './calc.js'
 import { Header } from './header.js'
-import { createElement } from 'react'
 
 const SCROLL_STYLE = `
   ::-webkit-scrollbar {

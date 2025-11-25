@@ -1,6 +1,0 @@
-{
-  "standard.enableGlobally": true,
-  "standard.enable": true,
-  "standard.engine": "standard",
-  "standard.usePackageJson": true
-}

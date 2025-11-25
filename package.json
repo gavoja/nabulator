@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node tools/build.js",
-    "lint": "npx standard",
-    "format": "npx standard --fix"
+    "lint": "npx eslint",
+    "format": "npx eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,8 @@
   "devDependencies": {
     "dotenv": "^17.2.3",
     "esbuild": "^0.27.0",
+    "eslint": "^9.39.1",
     "fs-extra": "^11.3.2",
-    "standard": "^17.1.2"
+    "neostandard": "^0.12.2"
   }
 }

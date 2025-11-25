@@ -101,8 +101,6 @@ export async function load () {
   if (id) {
     const data = await (await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, { headers: auth })).json()
     return data
-
-    console.log(data)
   }
 
   return []

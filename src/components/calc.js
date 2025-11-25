@@ -1,5 +1,5 @@
 /* global location */
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, Fragment } from 'react'
 import data from '../shared/data.js'
 import h from '../shared/h.js'
 import usePersistentState from '../shared/use-persistent-state.js'
@@ -7,7 +7,6 @@ import { Box } from './box.js'
 import { Grid } from './grid.js'
 import { Link } from './link.js'
 import { Select } from './select.js'
-import { Fragment } from 'react'
 
 const NABU_LINK = 'https://nabuchodonosor.bandcamp.com/album/nabuchodonosor'
 const DEFAULT_HASH = '#/E2,A2,D3,G3,B3,E4,,/42,30,21,14p,11p,8p,,/25.5'
