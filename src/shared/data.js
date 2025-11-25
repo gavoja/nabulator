@@ -220,7 +220,7 @@ export default {
     { name: '155b', weight: 0.00410464, approx: true }
   ],
   tunings: [
-    { name: '', value: ',,,,,,,'},
+    { name: '', value: ',,,,,,,' },
     { name: 'Bass 4 - Standard E', value: 'E1,A1,D2,G2,,,,' },
     { name: 'Bass 4 - Standard D', value: 'D1,G1,C2,F2,,,,' },
     { name: 'Bass 4 - Drop D', value: 'D1,A1,D2,G2,,,,' },

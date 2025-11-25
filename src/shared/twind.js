@@ -6,10 +6,10 @@ setup({
     screens: {
       sm: '0px',
       md: '0px',
-      lg: '900px',
+      lg: '900px'
     },
     fontFamily: {
-      'mono': ['"Roboto Mono"', 'monospace']
+      mono: ['"Roboto Mono"', 'monospace']
     },
     fontSize: {
       sm: '13px',

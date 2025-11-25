@@ -1,11 +1,13 @@
 {
   "name": "nabulator",
-  "version": "0.1.0",
-  "description": "String tension calculatoir",
+  "version": "0.2.0",
+  "description": "String tension calculator",
   "main": "src/main.js",
   "type": "module",
   "scripts": {
-    "start": "node tools/build.js"
+    "start": "node tools/build.js",
+    "lint": "npx standard",
+    "format": "npx standard --fix"
   },
   "repository": {
     "type": "git",
@@ -24,14 +26,13 @@
   },
   "homepage": "https://github.com/gavoja/nabulator#readme",
   "dependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@twind/preact": "^1.0.5",
-    "preact": "^10.25.4",
-    "twind": "^0.16.19",
-    "ws": "^8.18.0"
+    "preact": "^10.27.2",
+    "twcss": "^0.7.0",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
-    "dotenv": "^16.4.7",
-    "esbuild": "^0.24.2"
+    "dotenv": "^17.2.3",
+    "esbuild": "^0.27.0",
+    "standard": "^17.1.2"
   }
 }

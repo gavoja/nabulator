@@ -1,12 +1,11 @@
-/* global window, IS_PROD */
-
-const REDIRECT_URL = IS_PROD ? 'https://nabulator.nabusound.com' : 'http://localhost:8080'
+/* global location, localStorage, IS_PROD */
+const REDIRECT_URL = IS_PROD ? 'https://nabulator.nabusound.com' : 'http://localhost:3000'
 const CLIENT_ID = '366006877589-ook6bcpd8or7n9sjtdplg7r1ii3k61ev.apps.googleusercontent.com'
 const SCOPE = [
   'https://www.googleapis.com/auth/userinfo.email',
   'https://www.googleapis.com/auth/drive.metadata.readonly',
   'https://www.googleapis.com/auth/drive.file',
-  'https://www.googleapis.com/auth/drive.appdata',
+  'https://www.googleapis.com/auth/drive.appdata'
 ].join(' ')
 
 const FILE_NAME = 'nabulator.json'
@@ -26,8 +25,8 @@ Content-Transfer-Encoding: base64
 DATA
 --${BOUNDARY}--`
 
-let token = null
-let auth = null
+let token
+let auth
 
 // Initialise module.
 if (!token) {
@@ -41,13 +40,13 @@ if (!token) {
   auth = { Authorization: `Bearer ${token}`, Accept: 'application/json' }
 }
 
-export function signOut() {
+export function signOut () {
   localStorage.removeItem('token')
   token = null
   auth = null
 }
 
-export function signIn() {
+export function signIn () {
   token = (new URLSearchParams(location.hash)).get('access_token') || localStorage.getItem('token')
 
   // Google's OAuth 2.0 endpoint for requesting an access token
@@ -65,7 +64,7 @@ export function signIn() {
     response_type: 'token',
     scope: SCOPE,
     include_granted_scopes: 'true',
-    state: 'pass-through value',
+    state: 'pass-through value'
   }
 
   // Add form parameters as hidden input values.
@@ -82,7 +81,7 @@ export function signIn() {
   form.submit()
 }
 
-export async function getEmail() {
+export async function getEmail () {
   if (!token) {
     return null
   }
@@ -91,7 +90,7 @@ export async function getEmail() {
   return data.email
 }
 
-export async function load() {
+export async function load () {
   if (!token) {
     return []
   }
@@ -102,12 +101,14 @@ export async function load() {
   if (id) {
     const data = await (await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, { headers: auth })).json()
     return data
+
+    console.log(data)
   }
 
   return []
 }
 
-export async function save(data) {
+export async function save (data) {
   if (!token) {
     return
   }
@@ -120,16 +121,16 @@ export async function save(data) {
     params: { uploadType: 'multipart' },
     headers: {
       ...auth,
-      'Content-Type': `multipart/mixed; boundary="${BOUNDARY}"`,
+      'Content-Type': `multipart/mixed; boundary="${BOUNDARY}"`
     },
-    body: BODY.replace('DATA', window.btoa(JSON.stringify(data))),
+    body: BODY.replace('DATA', window.btoa(JSON.stringify(data)))
   }
 
   const obj = await (await fetch(`https://www.googleapis.com${path}?uploadType=multipart`, params)).json()
   console.log(`Saved to: ${obj.name}`)
 }
 
-async function get() {
+async function get () {
   // Search for the save file.
   const query = encodeURIComponent(`name = '${FILE_NAME}'`)
   const data = await (await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}`, { headers: auth })).json()

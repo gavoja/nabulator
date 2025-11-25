@@ -1,6 +1,7 @@
+/* global localStorage */
 import { useState } from 'preact/hooks'
 
-export default function usePersistentState(key, initialState) {
+export default function usePersistentState (key, initialState) {
   const stateFromLocalStorage = JSON.parse(localStorage.getItem(key))
   const [state, setState] = useState(stateFromLocalStorage || initialState)
 

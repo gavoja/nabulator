@@ -1,10 +1,10 @@
 import h from '../shared/h.js'
 
-export function Link({ href, onClick, children, selected }) {
+export function Link ({ href, onMouseDown, children }) {
   return h('a', {
     href,
-    onClick,
-    tw: 'text-blue-500 cursor-pointer hover:text-underline inline',
-    style: 'text-decoration-thickness: 1px; text-underline-offset: 4px',
-    children })
+    onMouseDown,
+    tw: 'text-blue-500 cursor-pointer hover:underline inline decoration-1 underline-offset-4',
+    children
+  })
 }

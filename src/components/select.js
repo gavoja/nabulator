@@ -1,8 +1,8 @@
 import h from '../shared/h.js'
 
-export function Select({ options, selectedValue, onChange }) {
+export function Select ({ options, selectedValue, onChange }) {
   return h('select', {
-    tw: 'w-full border-1 border-gray-300 p-1 pl-2 rounded-sm appearance-none',
+    tw: 'w-full border-1 border-gray-300 p-1 pl-2 rounded-sm bg-white',
     onChange,
     children: options.map(o =>
       h('option', {

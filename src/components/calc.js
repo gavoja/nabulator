@@ -1,20 +1,41 @@
+/* global location */
 import { useLayoutEffect, useState } from 'preact/hooks'
 import data from '../shared/data.js'
 import h from '../shared/h.js'
+import usePersistentState from '../shared/use-persistent-state.js'
 import { Box } from './box.js'
 import { Grid } from './grid.js'
+import { Link } from './link.js'
 import { Select } from './select.js'
 
-export function Calc() {
-  const [hash, setHash] = useState(location.hash)
+const NABU_LINK = 'https://nabuchodonosor.bandcamp.com/album/nabuchodonosor'
+const DEFAULT_HASH = '#/E2,A2,D3,G3,B3,E4,,/42,30,21,14p,11p,8p,,/25.5'
+
+export function Calc () {
+  const [freedomUnits, setFreedomUnits] = usePersistentState('units', false)
+  const [hash, setHash] = usePersistentState('hash', null)
 
   useLayoutEffect(() => {
-    window.addEventListener('hashchange', () => setHash(location.hash.substring(1)))
+    const handler = () => {
+      validateHash(hash)
+      setHash(location.hash)
+    }
+
+    handler()
+    window.addEventListener('hashchange', handler)
+    return () => window.removeEventListener('hashchange', handler)
   }, [])
+
+  if (!hash) {
+    return null
+  }
+
+  // Make sure hash reflects saved state.
+  location.hash = hash
 
   const { tuning, notes, gauges, scale } = resolveHash(hash)
 
-  return h('div', { tw: 'lg:mr-96 overflow-x-hidden overflow-y-auto' },
+  return h('div', { tw: 'lg:mr-96 overflow-x-hidden overflow-y-auto h-full' },
     h(Box,
       h(Grid,
         h('div', { tw: 'flex items-center' }, 'Tuning'),
@@ -22,7 +43,7 @@ export function Calc() {
           h(Select, {
             options: data.tunings,
             selectedValue: tuning,
-            onChange(event) {
+            onChange (event) {
               const tuning = event.target.value
               location.hash = `/${tuning}/${gauges}/${scale}`
             }
@@ -33,7 +54,7 @@ export function Calc() {
           h(Select, {
             options: data.scales,
             selectedValue: scale,
-            onChange(event) {
+            onChange (event) {
               const scale = event.target.value
               location.hash = `/${tuning}/${gauges}/${scale}`
             }
@@ -46,16 +67,15 @@ export function Calc() {
         h('div', 'Note'),
         h('div', 'String'),
         h('div', { tw: 'text-right' }, 'Tension'),
-        h('div', { tw: 'text-right' }, 'Newtons'),
         h('div', { tw: 'ml-8' }, 'Chart'),
         [...Array(8).keys()].map(index => {
-          const { tension, newtons, chart } = getTension(index)
+          const { tension, chart } = getTension(hash, index, freedomUnits)
 
           return [
             h(Select, {
               options: data.notes,
               selectedValue: notes?.[index],
-              onChange(event) {
+              onChange (event) {
                 notes[index] = event.target.value
                 location.hash = `/${notes}/${gauges}/${scale}`
               }
@@ -63,21 +83,51 @@ export function Calc() {
             h(Select, {
               options: data.gauges,
               selectedValue: gauges?.[index],
-              onChange(event) {
+              onChange (event) {
                 gauges[index] = event.target.value
                 location.hash = `/${tuning}/${gauges}/${scale}`
               }
             }),
             h('div', { tw: 'flex items-center justify-end' }, tension),
-            h('div', { tw: 'flex items-center justify-end' }, newtons),
             h('div', { tw: 'flex items-center' },
               h('div', { tw: `ml-8 bg-gray-800 h-4 rounded-sm w-[${chart}%]` })
             )
           ]
         })
       )
+    ),
+    h(Box,
+      // Add checkbox to toggle between newtons and freedom units.
+      h('label', { tw: 'cursor-pointer flex items-center' },
+        h('input', {
+          tw: 'accent-blue-500',
+          type: 'checkbox',
+          checked: freedomUnits,
+          onChange (event) {
+            setFreedomUnits(event.target.checked)
+          }
+        }),
+        h('span', { tw: 'ml-2' }, 'Use freedom units instead of Newtons')
+      ),
+      h('p', { tw: 'mt-8' },
+        'String tension calculator by ',
+        h(Link, { href: NABU_LINK }, 'Nabuchodonosor.'),
+        h('br'),
+        'Please ',
+        h(Link, { href: NABU_LINK }, 'check our music'),
+        ' if you like the app.'
+      ),
+      h('p',
+        'The following types of strings are used: plan steel (p), nickel plated round wound (no marker) and nickel plated round wound bass (b). Tension may slightly differ if other types of strings are used.'
+      )
     )
   )
+}
+
+function validateHash (hash) {
+  if (location.hash.split('/').length < 4) {
+    location.hash = hash || DEFAULT_HASH
+  }
 }
 
 function resolveHash (hash) {
@@ -85,8 +135,8 @@ function resolveHash (hash) {
   return { tuning, notes: tuning.split(','), gauges: gauges?.split?.(','), scale }
 }
 
-function getTension (index) {
-  const { notes, gauges, scale } = resolveHash(location.hash)
+function getTension (hash, index, useFreedomUnits = false) {
+  const { notes, gauges, scale } = resolveHash(hash)
 
   if (notes?.length !== 8 || gauges?.length !== 8 || !scale) {
     return { tension: 0, newtons: 0, chart: 0 }
@@ -107,9 +157,9 @@ function getTension (index) {
   const freq = data.notes.find(n => n.name === note).freq
 
   // Calculate tension.
-  const tension = (weight * ((2 * currentScale * freq) ** 2)) / 386.4 // * 4.45
+  const tension = (weight * ((2 * currentScale * freq) ** 2)) / 386.4
   const newtons = tension * 4.45
   const chart = Math.min(100, newtons / 2)
 
-  return { tension: tension.toFixed(2), newtons: newtons.toFixed(2), chart }
+  return { tension: useFreedomUnits ? tension.toFixed(2) : newtons.toFixed(2), chart }
 }

@@ -1,8 +1,7 @@
 import { h as ph } from 'preact'
 
 // Makes props optional.
-export default function h(...args) {
-
+export default function h (...args) {
   let [, props] = args
 
   // Ensure props are present.
