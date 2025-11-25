@@ -1,0 +1,4 @@
+[context.production]
+  command = "npm run build"
+  publish = "target/"
+  environment = { NODE_VERSION = "22.21.1" }
