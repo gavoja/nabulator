@@ -1,5 +1,5 @@
 /* global location */
-import { useLayoutEffect, useState } from 'preact/hooks'
+import { useLayoutEffect, useState } from 'react'
 import { getEmail, load, save, signIn, signOut } from '../shared/google.js'
 import h from '../shared/h.js'
 import usePersistentState from '../shared/use-persistent-state.js'
@@ -7,6 +7,7 @@ import { Box } from './box.js'
 import { Dialog } from './dialog.js'
 import { Icon } from './icon.js'
 import { Link } from './link.js'
+import { Fragment } from 'react'
 
 import ICON_CLOSE from '../assets/close.svg'
 import ICON_MENU from '../assets/menu.svg'
@@ -61,45 +62,41 @@ export function Menu () {
     }),
     h('div', {
       tw: `overflow-x-hidden overflow-y-auto fixed top-14 right-0 w-96 h-screen max-w-[90%] bg-white border-l border-gray-300 animate-menu lg:animate-none lg:block ${open ? '' : 'hidden'}`,
-      style: 'height: calc(100% - 56px)', // For scroll to work.
-      children: [
-        h(Box, !ready
-          ? 'Loading...'
-          : [
-              // Not signed in.
-              !email && h('div',
-                h(Link, {
-                  onMouseDown () {
-                    signIn()
-                  },
-                  href: '#',
-                  children: 'Sign in with Google'
-                }),
-                h('span', ' to save')
-              ),
-              // Signed in.
-              email && h('div',
-                h(Link, {
-                  href: '#',
-                  onMouseDown () {
-                    signOut()
-                    setEmail(null)
-                    setSelected(null)
-                    setSaves([])
-                  },
-                  children: `Sign Out (${email})`
-                }),
-                h('span', ' | '),
-                h(Link, {
-                  onMouseDown: () => setEditMode(true),
-                  children: selectedSave ? 'Edit' : 'Save'
-                })
-              )
-            ]
+      style: { height: 'calc(100% - 56px)' }, // For scroll to work.
+      children: h(Fragment,
+        h(Box, !ready ? 'Loading...' : h(Fragment,
+          !email && h('div',
+            h(Link, {
+              onMouseDown () {
+                signIn()
+              },
+              href: '#',
+              children: 'Sign in with Google'
+            }),
+            h('span', ' to save')
+          ),
+          // Signed in.
+          email && h('div',
+            h(Link, {
+              href: '#',
+              onMouseDown () {
+                signOut()
+                setEmail(null)
+                setSelected(null)
+                setSaves([])
+              },
+              children: `Sign Out (${email})`
+            }),
+            h('span', ' | '),
+            h(Link, {
+              onMouseDown: () => setEditMode(true),
+              children: selectedSave ? 'Edit' : 'Save'
+            })
+          ))
         ),
         // Saved tensions.
         h('ul', { tw: 'space-y-2 mt-4' }, saves.map(save =>
-          h('li', { tw: `border-l-4 pl-1 transition-colors ${save.value === selected ? 'border-blue-500' : 'border-white'}` },
+          h('li', { tw: `border-l-4 pl-2 py-1 pr-1 transition-colors ${save.value === selected ? 'border-blue-500' : 'border-white'}`, key: save.value },
             h(Link, {
               href: `#${save.value}`,
               selected: true,
@@ -122,7 +119,7 @@ export function Menu () {
             setEditMode(false)
           }
         })
-      ]
+      )
     })
   )
 }

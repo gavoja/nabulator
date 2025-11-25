@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import { context as esbuildContext } from 'esbuild'
-import fs from 'node:fs/promises'
+import fs from 'fs-extra'
 import path from 'node:path'
 import { reload, serve } from './serve.js'
 
@@ -37,12 +37,24 @@ function svgPlugin () {
   }
 }
 
+function copyStaticPlugin () {
+  return {
+    name: 'copy-static-plugin',
+    setup (build) {
+      build.onEnd(async () => {
+        await fs.copy('./static', './target')
+        console.log('[build] Static files copied.')
+      })
+    }
+  }
+}
+
 async function main () {
+  await fs.emptyDir('./target')
   const ctx = await esbuildContext({
-    entryPoints: ['./src/main.js', './src/index.html'],
+    entryPoints: ['./src/main.js'],
     outdir: './target',
-    loader: { '.html': 'copy' },
-    plugins: [svgPlugin(), serverReloadPlugin()],
+    plugins: [svgPlugin(), serverReloadPlugin(), copyStaticPlugin()],
     format: 'esm',
     bundle: true,
     minify: IS_PROD,

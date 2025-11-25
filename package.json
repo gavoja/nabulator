@@ -27,12 +27,15 @@
   "homepage": "https://github.com/gavoja/nabulator#readme",
   "dependencies": {
     "preact": "^10.27.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "twcss": "^0.7.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
     "esbuild": "^0.27.0",
+    "fs-extra": "^11.3.2",
     "standard": "^17.1.2"
   }
 }

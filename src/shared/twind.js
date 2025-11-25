@@ -1,4 +1,4 @@
-import { setup } from '@twind/preact'
+import { setup } from '@twind/react'
 
 setup({
   props: { className: true },

@@ -1,8 +1,9 @@
 /* global location, localStorage */
-import { Fragment } from 'preact'
+import { Fragment } from 'react'
 import h from '../shared/h.js'
 import { Calc } from './calc.js'
 import { Header } from './header.js'
+import { createElement } from 'react'
 
 const SCROLL_STYLE = `
   ::-webkit-scrollbar {
@@ -22,10 +23,11 @@ const SCROLL_STYLE = `
 export function App () {
   return h('div', {
     tw: 'fixed w-screen h-full font-mono relative text-sm text-gray-800 grid grid-cols-1',
-    style: 'grid-template-rows: auto 1fr',
+    style: { gridTemplateRows: 'auto 1fr' },
     children: h(Fragment,
-      h('style', SCROLL_STYLE),
-      h(Header),h(Calc)
+      h('style', { key: 'app-style' }, SCROLL_STYLE),
+      h(Header, { key: 'app-header' }),
+      h(Calc, { key: 'app-calc' })
     )
   })
 }

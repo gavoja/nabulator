@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'preact/hooks'
+import { useEffect, useRef } from 'react'
 import focusTrap from '../shared/focus-trap.js'
 import h from '../shared/h.js'
 import { Box } from './box.js'

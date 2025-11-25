@@ -1,5 +1,5 @@
 /* global location */
-import { useLayoutEffect, useState } from 'preact/hooks'
+import { useLayoutEffect } from 'react'
 import data from '../shared/data.js'
 import h from '../shared/h.js'
 import usePersistentState from '../shared/use-persistent-state.js'
@@ -7,6 +7,7 @@ import { Box } from './box.js'
 import { Grid } from './grid.js'
 import { Link } from './link.js'
 import { Select } from './select.js'
+import { Fragment } from 'react'
 
 const NABU_LINK = 'https://nabuchodonosor.bandcamp.com/album/nabuchodonosor'
 const DEFAULT_HASH = '#/E2,A2,D3,G3,B3,E4,,/42,30,21,14p,11p,8p,,/25.5'
@@ -70,9 +71,10 @@ export function Calc () {
         h('div', { tw: 'ml-8' }, 'Chart'),
         [...Array(8).keys()].map(index => {
           const { tension, chart } = getTension(hash, index, freedomUnits)
-
-          return [
+          return h(Fragment, { key: `string-${index}` },
             h(Select, {
+              key: `note-${index}`,
+              name: `note-${index}`,
               options: data.notes,
               selectedValue: notes?.[index],
               onChange (event) {
@@ -81,6 +83,8 @@ export function Calc () {
               }
             }),
             h(Select, {
+              key: `gauge-${index}`,
+              name: `gauge-${index}`,
               options: data.gauges,
               selectedValue: gauges?.[index],
               onChange (event) {
@@ -92,22 +96,25 @@ export function Calc () {
             h('div', { tw: 'flex items-center' },
               h('div', { tw: `ml-8 bg-gray-800 h-4 rounded-sm w-[${chart}%]` })
             )
-          ]
+          )
         })
       )
     ),
     h(Box,
       // Add checkbox to toggle between newtons and freedom units.
-      h('label', { tw: 'cursor-pointer flex items-center' },
-        h('input', {
-          tw: 'accent-blue-500',
-          type: 'checkbox',
-          checked: freedomUnits,
-          onChange (event) {
-            setFreedomUnits(event.target.checked)
-          }
-        }),
-        h('span', { tw: 'ml-2' }, 'Use freedom units instead of Newtons')
+      h('label', { tw: 'cursor-pointer flex gap-2 items-center' },
+        h('div', { tw: 'flex items-center' },
+          h('input', {
+            tw: 'accent-blue-500',
+            name: 'units',
+            type: 'checkbox',
+            checked: freedomUnits,
+            onChange (event) {
+              setFreedomUnits(event.target.checked)
+            }
+          })
+        ),
+        h('span', 'Use freedom units instead of Newtons')
       ),
       h('p', { tw: 'mt-8' },
         'String tension calculator by ',
