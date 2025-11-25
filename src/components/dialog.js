@@ -35,7 +35,7 @@ export function Dialog ({ text, show, onUpdate, onDelete, onCancel }) {
       }
 
       if (event.key === 'Enter') {
-        dialogRef.current?.close()
+        dialogRef.current.close()
         onUpdate(inputRef.current.value)
       }
     },
