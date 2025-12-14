@@ -1,5 +1,5 @@
-/* global location, localStorage, IS_PROD */
-const REDIRECT_URL = IS_PROD ? 'https://nabulator.nabusound.com' : 'http://localhost:3000'
+/* global location, localStorage, IS_DEV */
+const REDIRECT_URL = IS_DEV ? 'http://localhost:3000' : 'https://nabulator.nabusound.com'
 const CLIENT_ID = '366006877589-ook6bcpd8or7n9sjtdplg7r1ii3k61ev.apps.googleusercontent.com'
 const SCOPE = [
   'https://www.googleapis.com/auth/userinfo.email',
@@ -25,30 +25,40 @@ Content-Transfer-Encoding: base64
 DATA
 --${BOUNDARY}--`
 
-let token
-let auth
+const TOKEN_VALIDITY = 3_600_000 // Less than 1 hour.
 
-// Initialise module.
+// Initialise token.
+let token
 if (!token) {
-  const tokenFromUrl = (new URLSearchParams(location.hash)).get('access_token')
-  if (tokenFromUrl) {
-    location.hash = ''
-    localStorage.setItem('token', tokenFromUrl)
+  // Handle token expiry.
+  const tokenTime = parseInt(localStorage.getItem('token_time') || '0', 10)
+  if (Date.now() - tokenTime > TOKEN_VALIDITY) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('token_time')
   }
 
+  // Check for token in URL fragment (available after sign in redirect from Google).
+  // Save token to local storage.
+  const tokenFromUrl = (new URLSearchParams(location.hash)).get('access_token')
+  if (tokenFromUrl) {
+    localStorage.setItem('token', tokenFromUrl)
+    localStorage.setItem('token_time', Date.now().toString())
+    location.hash = ''
+  }
+
+  // Load token from local storage.
   token = localStorage.getItem('token')
-  auth = { Authorization: `Bearer ${token}`, Accept: 'application/json' }
 }
 
 export function signOut () {
-  localStorage.removeItem('token')
   token = null
-  auth = null
+}
+
+function getAuthHeaders () {
+  return { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' }
 }
 
 export function signIn () {
-  token = (new URLSearchParams(location.hash)).get('access_token') || localStorage.getItem('token')
-
   // Google's OAuth 2.0 endpoint for requesting an access token
   const oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth'
 
@@ -85,6 +95,7 @@ export async function getEmail () {
   if (!token) {
     return null
   }
+
   const res = await fetch(`https://www.googleapis.com/oauth2/v2/tokeninfo?accessToken=${token}`)
   const data = await res.json()
   return data.email
@@ -99,7 +110,8 @@ export async function load () {
 
   // Get the file if exists.
   if (id) {
-    const data = await (await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, { headers: auth })).json()
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`, { headers: getAuthHeaders() })
+    const data = await res.json()
     return data
   }
 
@@ -118,7 +130,7 @@ export async function save (data) {
     method: id ? 'PATCH' : 'POST',
     params: { uploadType: 'multipart' },
     headers: {
-      ...auth,
+      ...getAuthHeaders(),
       'Content-Type': `multipart/mixed; boundary="${BOUNDARY}"`
     },
     body: BODY.replace('DATA', window.btoa(JSON.stringify(data)))
@@ -131,6 +143,7 @@ export async function save (data) {
 async function get () {
   // Search for the save file.
   const query = encodeURIComponent(`name = '${FILE_NAME}'`)
-  const data = await (await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}`, { headers: auth })).json()
+  const res = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}`, { headers: getAuthHeaders() })
+  const data = await res.json()
   return data.files?.[0]?.id
 }
