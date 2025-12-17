@@ -30,7 +30,7 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "twcss": "^0.9.0"
+    "twcss": "^0.10.0"
   },
   "devDependencies": {
     "dotenv": "^17.2.3",
