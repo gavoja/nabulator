@@ -20,7 +20,7 @@ const CUSTOM_SCROLLBAR = `
 
 export function App () {
   return h('div', {
-    tw: 'fixed w-screen h-full font-[JetBrains_Mono] relative text-sm text-gray-800 grid grid-cols-1',
+    tw: 'fixed w-screen h-full font-[JetBrains_Mono] relative text-sm text-gray-800 grid grid-cols-1 animate-fade',
     style: { gridTemplateRows: 'auto 1fr' },
     children: h(Fragment,
       h('style', { key: 'app-style' }, CUSTOM_SCROLLBAR),
