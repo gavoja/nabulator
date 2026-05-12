@@ -35,7 +35,7 @@ export function Calc () {
 
   const { tuning, notes, gauges, scale } = resolveHash(hash)
 
-  return h('div', { tw: 'lg:mr-96 overflow-x-hidden overflow-y-auto h-full' },
+  return h('div', { tw: 'lg:mr-96 overflow-x-hidden overflow-y-auto scrollbar-stable h-full' },
     h(Box,
       h(Grid,
         h('div', { tw: 'flex items-center' }, 'Tuning'),

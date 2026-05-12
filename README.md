@@ -1,3 +1,3 @@
-# Nabulator - String Tension Calculateor
+# Nabulator - string tension calculateor
 
-See at http://nabulator.nabusound.com.
+See at http://nabulator.netlify.app.

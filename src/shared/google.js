@@ -1,5 +1,5 @@
-/* global location, localStorage, IS_DEV */
-const REDIRECT_URL = IS_DEV ? 'http://localhost:3000' : 'https://nabulator.nabusound.com'
+/* global location, localStorage */
+const REDIRECT_URL = location.origin
 const CLIENT_ID = '366006877589-ook6bcpd8or7n9sjtdplg7r1ii3k61ev.apps.googleusercontent.com'
 const SCOPE = [
   'https://www.googleapis.com/auth/userinfo.email',

@@ -60,7 +60,7 @@ export function Menu () {
       children: h(Icon, { svg: open ? ICON_CLOSE : ICON_MENU })
     }),
     h('div', {
-      tw: `overflow-x-hidden overflow-y-auto fixed top-14 right-0 w-96 h-screen max-w-[90%] bg-white border-l border-gray-300 animate-menu lg:animate-none lg:block ${open ? '' : 'hidden'}`,
+      tw: `overflow-x-hidden overflow-y-auto scrollbar-stable fixed top-14 right-0 w-96 h-screen max-w-[90%] bg-white border-l border-gray-300 animate-menu lg:animate-none lg:block ${open ? '' : 'hidden'}`,
       style: { height: 'calc(100% - 56px)' }, // For scroll to work.
       children: h(Fragment,
         h(Box,
